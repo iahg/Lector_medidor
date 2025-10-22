@@ -157,60 +157,82 @@ def process_image_with_openai(image, api_key, prompt, json_example):
 
 def display_results_table(result_json):
     """Display the JSON results in a structured table format"""
-    st.markdown("### Analysis Results")
+    st.markdown("### Resultados del Análisis")
     
     # Meter Reading Section
     col1, col2 = st.columns(2)
     with col1:
-        st.metric("Meter Reading (kWh)", result_json.get("meter_reading", "N/A"))
+        st.metric("Lectura del Medidor (kWh)", result_json.get("meter_reading", "N/A"))
     with col2:
-        st.metric("Reading Quality", f"{result_json.get('reading_quality', 0)}%")
+        st.metric("Calidad de Lectura", f"{result_json.get('reading_quality', 0)}%")
     
     st.markdown("---")
     
     # Digit Confidence Table
-    st.markdown("#### Digit-by-Digit Confidence")
+    st.markdown("#### Confianza por Dígito")
     digit_data = result_json.get("digit_confidence", [])
     if digit_data:
         df_digits = pd.DataFrame(digit_data)
-        df_digits['confidence'] = df_digits['confidence'].apply(lambda x: f"{x*100:.1f}%")
+        
+        # Handle both Spanish and English field names
+        confidence_col = None
+        if 'confianza' in df_digits.columns:
+            confidence_col = 'confianza'
+        elif 'Confianza' in df_digits.columns:
+            confidence_col = 'Confianza'
+        elif 'confidence' in df_digits.columns:
+            confidence_col = 'confidence'
+        
+        if confidence_col:
+            df_digits[confidence_col] = df_digits[confidence_col].apply(lambda x: f"{x*100:.1f}%")
+        
+        # Rename columns to Spanish for display
+        column_map = {
+            'digit': 'Dígito',
+            'digito': 'Dígito', 
+            'dígito': 'Dígito',
+            'confidence': 'Confianza',
+            'confianza': 'Confianza',
+            'Confianza': 'Confianza'
+        }
+        df_digits = df_digits.rename(columns=column_map)
         st.dataframe(df_digits, use_container_width=True, hide_index=True)
     
     st.markdown("---")
     
     # Condition Assessment
-    st.markdown("#### Condition Assessment")
+    st.markdown("#### Evaluación de Condición")
     condition = result_json.get("condition_assessment", {})
     if condition:
         df_condition = pd.DataFrame([
-            {"Aspect": "Physical State", "Status": condition.get("physical_state", "N/A")},
-            {"Aspect": "Environment", "Status": condition.get("environment", "N/A")},
-            {"Aspect": "Label Visibility", "Status": condition.get("label_visibility", "N/A")},
-            {"Aspect": "Overall Condition", "Status": condition.get("overall_condition", "N/A")}
+            {"Aspecto": "Estado Físico", "Estado": condition.get("physical_state", "N/A")},
+            {"Aspecto": "Ambiente", "Estado": condition.get("environment", "N/A")},
+            {"Aspecto": "Visibilidad de Etiquetas", "Estado": condition.get("label_visibility", "N/A")},
+            {"Aspecto": "Condición General", "Estado": condition.get("overall_condition", "N/A")}
         ])
         st.dataframe(df_condition, use_container_width=True, hide_index=True)
     
     st.markdown("---")
     
     # Summary
-    st.markdown("#### Summary")
-    summary = result_json.get("summary", "No summary available.")
+    st.markdown("#### Resumen")
+    summary = result_json.get("summary", "No hay resumen disponible.")
     st.info(summary)
 
 
 # Create tabs
-tab1, tab2 = st.tabs(["Meter Reader", "Configuration"])
+tab1, tab2 = st.tabs(["Lector de Medidor", "Configuración"])
 
 # MAIN TAB
 with tab1:
-    st.markdown('<div class="main-header">Electric Meter Reader</div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-header">Lector de Medidor Eléctrico</div>', unsafe_allow_html=True)
     #st.markdown('<div class="sub-header">Capture an image of an electric meter for automated analysis</div>', unsafe_allow_html=True)
     
     # Camera capture section
     #st.markdown('<div class="upload-section">', unsafe_allow_html=True)
     
-    st.markdown("#### Capture from Camera")
-    camera_photo = st.camera_input("Take a picture", label_visibility="collapsed")
+    st.markdown("#### Capturar desde Cámara")
+    camera_photo = st.camera_input("Tomar foto", label_visibility="collapsed")
     if camera_photo:
         st.session_state.uploaded_image = camera_photo
     
@@ -218,11 +240,11 @@ with tab1:
     
     # Process button
     if st.session_state.uploaded_image:
-        if st.button("Process Image", type="primary", use_container_width=True):
+        if st.button("Procesar Imagen", type="primary", use_container_width=True):
             if not st.session_state.api_key:
-                st.error("Please enter your OpenAI API key in the Configuration tab.")
+                st.error("Por favor ingrese su clave API de OpenAI en la pestaña de Configuración.")
             else:
-                with st.spinner("Analyzing meter image..."):
+                with st.spinner("Analizando imagen del medidor..."):
                     result, error = process_image_with_openai(
                         st.session_state.uploaded_image,
                         st.session_state.api_key,
@@ -231,10 +253,10 @@ with tab1:
                     )
                     
                     if error:
-                        st.error(f"Error processing image: {error}")
+                        st.error(f"Error al procesar la imagen: {error}")
                     else:
                         st.session_state.processing_result = result
-                        st.success("Analysis complete!")
+                        st.success("¡Análisis completado!")
     
     # Display results
     if st.session_state.processing_result:
@@ -245,40 +267,40 @@ with tab1:
         
         # Option to download results
         st.download_button(
-            label="Download Results (JSON)",
-            data=json.dumps(st.session_state.processing_result, indent=2),
-            file_name="meter_analysis.json",
+            label="Descargar Resultados (JSON)",
+            data=json.dumps(st.session_state.processing_result, indent=2, ensure_ascii=False),
+            file_name="analisis_medidor.json",
             mime="application/json"
         )
 
 # CONFIGURATION TAB
 with tab2:
-    st.markdown("### Configuration Settings")
-    st.markdown("Configure your OpenAI API key and customize the analysis parameters.")
+    st.markdown("### Configuración")
+    st.markdown("Configure su clave API de OpenAI y personalice los parámetros de análisis.")
     
     st.markdown("---")
     
     # API Key input
-    st.markdown("#### OpenAI API Key")
+    st.markdown("#### Clave API de OpenAI")
     api_key_input = st.text_input(
-        "Enter your OpenAI API key",
+        "Ingrese su clave API de OpenAI",
         type="password",
         value=st.session_state.api_key,
-        help="Your API key will be stored only for this session and never saved permanently."
+        help="Su clave API se almacenará solo para esta sesión y nunca se guardará permanentemente."
     )
     if api_key_input != st.session_state.api_key:
         st.session_state.api_key = api_key_input
-        st.success("API key updated!")
+        st.success("¡Clave API actualizada!")
     
     st.markdown("---")
     
     # Prompt customization
-    st.markdown("#### Analysis Prompt")
+    st.markdown("#### Prompt de Análisis")
     prompt_input = st.text_area(
-        "Customize the analysis prompt",
+        "Personalice el prompt de análisis",
         value=st.session_state.prompt,
         height=300,
-        help="This prompt guides the AI in analyzing the meter image."
+        help="Este prompt guía a la IA en el análisis de la imagen del medidor."
     )
     if prompt_input != st.session_state.prompt:
         st.session_state.prompt = prompt_input
@@ -286,12 +308,12 @@ with tab2:
     st.markdown("---")
     
     # JSON structure customization
-    st.markdown("#### Expected JSON Structure")
+    st.markdown("#### Estructura JSON Esperada")
     json_input = st.text_area(
-        "Define the expected JSON output format",
+        "Defina el formato de salida JSON esperado",
         value=st.session_state.json_structure,
         height=400,
-        help="This JSON example shows the AI what format to return."
+        help="Este ejemplo JSON muestra a la IA qué formato devolver."
     )
     
     # Validate JSON
@@ -299,16 +321,16 @@ with tab2:
         json.loads(json_input)
         if json_input != st.session_state.json_structure:
             st.session_state.json_structure = json_input
-        st.success("JSON structure is valid")
+        st.success("La estructura JSON es válida")
     except json.JSONDecodeError as e:
-        st.error(f"Invalid JSON format: {e}")
+        st.error(f"Formato JSON inválido: {e}")
     
     st.markdown("---")
     
     # Save button
     col1, col2, col3 = st.columns([1, 1, 1])
     with col2:
-        if st.button("Reset to Defaults", use_container_width=True):
+        if st.button("Restaurar Valores Predeterminados", use_container_width=True):
             st.session_state.prompt = """You are an expert in electrical infrastructure inspection. 
 Analyze the provided image of an electrical energy meter.
 
