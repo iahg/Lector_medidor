@@ -5,6 +5,7 @@ from openai import OpenAI
 import base64
 from io import BytesIO
 from PIL import Image
+from camera_component import camera_input_component
 
 # Page configuration
 st.set_page_config(
@@ -209,10 +210,21 @@ with tab1:
     # Camera capture section
     #st.markdown('<div class="upload-section">', unsafe_allow_html=True)
     
-    st.markdown("#### Capture from Camera")
-    camera_photo = st.camera_input("Take a picture", label_visibility="collapsed")
-    if camera_photo:
-        st.session_state.uploaded_image = camera_photo
+    st.markdown("#### Capturar desde Cámara")
+    
+    # Use custom camera component that forces rear camera
+    camera_data = camera_input_component()
+    
+    # Process the camera data if received
+    if camera_data and camera_data.startswith('data:image'):
+        # Extract base64 data
+        header, encoded = camera_data.split(',', 1)
+        image_bytes = base64.b64decode(encoded)
+        image = Image.open(BytesIO(image_bytes))
+        
+        # Save to session state
+        st.session_state.uploaded_image = BytesIO(image_bytes)
+        st.session_state.uploaded_image.name = "captured_image.jpg"
     
     st.markdown('</div>', unsafe_allow_html=True)
     
