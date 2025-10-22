@@ -8,7 +8,7 @@ from PIL import Image
 
 # Page configuration
 st.set_page_config(
-    page_title="Electric Meter Reader",
+    page_title="Lector Medidor Eléctrico",
     page_icon="⚡",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -66,27 +66,32 @@ Your tasks:
    - General maintenance state (good / moderate / poor).
 4. Provide a short human-readable summary describing your assessment in plain language.
 
-Do not include any explanation or formatting other than the requested JSON output. Attached is an example for you to replace with the current, correct data."""
+Do not include any explanation or formatting other than the requested JSON output. 
+Attached is an example for you to replace with the current, correct data.
+
+If the image does not show an electrical meter, just return the same JSON with zeros and in the summary add a text saying that what the photo is, if recognizable.
+
+All answers on the returning JSON must be in SPANISH."""
 
 if 'json_structure' not in st.session_state:
     st.session_state.json_structure = """{
   "meter_reading": "078254",
   "reading_quality": 92,
   "digit_confidence": [
-    {"digit": "0", "confidence": 0.98},
-    {"digit": "7", "confidence": 0.95},
-    {"digit": "8", "confidence": 0.94},
-    {"digit": "2", "confidence": 0.90},
-    {"digit": "5", "confidence": 0.88},
-    {"digit": "4", "confidence": 0.92}
+    {"digito": "0", "confianza": 0.98},
+    {"digito": "7", "confianza": 0.95},
+    {"digito": "8", "confianza": 0.94},
+    {"digito": "2", "confianza": 0.90},
+    {"digito": "5", "confianza": 0.88},
+    {"digito": "4", "confianza": 0.92}
   ],
   "condition_assessment": {
-    "physical_state": "intact but dirty",
-    "environment": "vegetation present, exposed to weather",
-    "label_visibility": "clear",
-    "overall_condition": "moderate"
+    "physical_state": "Intacto pero sucio",
+    "environment": "Vegetacion presente, expuesto a la lluvia",
+    "label_visibility": "Limpio y claro",
+    "overall_condition": "Moderado"
   },
-  "summary": "The meter appears functional and readable with a clear display. Some dirt and nearby vegetation are visible; cleaning and clearing are recommended to prevent future degradation."
+  "summary": "El medidor aparece funcional y legible con una pantalla clara. Se observan algunos residuos y cerca de la vegetación; se recomienda limpiar para evitar la degradación futura."
 }"""
 
 if 'uploaded_image' not in st.session_state:
