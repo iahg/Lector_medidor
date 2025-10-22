@@ -317,26 +317,26 @@ Your tasks:
    - General maintenance state (good / moderate / poor).
 4. Provide a short human-readable summary describing your assessment in plain language.
 
-Do not include any explanation or formatting other than the requested JSON output. Attached is an example for you to replace with the current, correct data."""
+Do not include any explanation or formatting other than the requested JSON output. Attached is an example for you to replace with the current, correct data. All answers on the returning JSON must be in SPANISH."""
             
             st.session_state.json_structure = """{
   "meter_reading": "078254",
   "reading_quality": 92,
   "digit_confidence": [
-    {"digit": "0", "confidence": 0.98},
-    {"digit": "7", "confidence": 0.95},
-    {"digit": "8", "confidence": 0.94},
-    {"digit": "2", "confidence": 0.90},
-    {"digit": "5", "confidence": 0.88},
-    {"digit": "4", "confidence": 0.92}
+    {"dígito": "0", "Confianza": 0.98},
+    {"dígito": "7", "Confianza": 0.95},
+    {"dígito": "8", "Confianza": 0.94},
+    {"dígito": "2", "Confianza": 0.90},
+    {"dígito": "5", "Confianza": 0.88},
+    {"dígito": "4", "Confianza": 0.92}
   ],
   "condition_assessment": {
-    "physical_state": "intact but dirty",
-    "environment": "vegetation present, exposed to weather",
-    "label_visibility": "clear",
-    "overall_condition": "moderate"
+    "physical_state": "Intacto pero sucio",
+    "environment": "Vegetacion presente, expuesto a la lluvia",
+    "label_visibility": "Limpio y claro",
+    "overall_condition": "Moderado"
   },
-  "summary": "The meter appears functional and readable with a clear display. Some dirt and nearby vegetation are visible; cleaning and clearing are recommended to prevent future degradation."
+  "summary": "El medidor aparece funcional y legible con una pantalla clara. Se observan algunos residuos y cerca de la vegetación; se recomienda limpiar para evitar la degradación futura."
 }"""
             st.rerun()
 
