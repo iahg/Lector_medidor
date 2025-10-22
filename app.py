@@ -202,7 +202,7 @@ with tab1:
     #st.markdown('<div class="sub-header">Capture an image of an electric meter for automated analysis</div>', unsafe_allow_html=True)
     
     # Camera capture section
-    #st.markdown('<div class="upload-section">', unsafe_allow_html=True)
+    st.markdown('<div class="upload-section">', unsafe_allow_html=True)
     
     st.markdown("#### Capture from Camera")
     camera_photo = st.camera_input("Take a picture", label_visibility="collapsed")
