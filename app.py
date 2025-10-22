@@ -199,7 +199,7 @@ tab1, tab2 = st.tabs(["Meter Reader", "Configuration"])
 # MAIN TAB
 with tab1:
     st.markdown('<div class="main-header">Electric Meter Reader</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">Capture an image of an electric meter for automated analysis</div>', unsafe_allow_html=True)
+    #st.markdown('<div class="sub-header">Capture an image of an electric meter for automated analysis</div>', unsafe_allow_html=True)
     
     # Camera capture section
     #st.markdown('<div class="upload-section">', unsafe_allow_html=True)
