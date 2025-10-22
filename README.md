@@ -5,7 +5,6 @@ A professional Streamlit application for automated electric meter analysis using
 ## Features
 
 - **Mobile Camera Support**: Capture meter images directly from your phone's camera
-- **Image Upload**: Upload photos from your device
 - **AI-Powered Analysis**: Uses OpenAI GPT-4 Vision to:
   - Extract meter readings
   - Assess reading quality and confidence
@@ -65,7 +64,7 @@ streamlit run app.py
 ## Usage
 
 1. **Main Tab**:
-   - Upload an image or capture one using your camera
+   - Capture an image using your camera
    - Click "Process Image" to analyze
    - View results in structured tables
    - Download results as JSON

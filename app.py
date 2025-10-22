@@ -199,35 +199,15 @@ tab1, tab2 = st.tabs(["Meter Reader", "Configuration"])
 # MAIN TAB
 with tab1:
     st.markdown('<div class="main-header">Electric Meter Reader</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">Upload or capture an image of an electric meter for automated analysis</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">Capture an image of an electric meter for automated analysis</div>', unsafe_allow_html=True)
     
-    # Image upload section
+    # Camera capture section
     st.markdown('<div class="upload-section">', unsafe_allow_html=True)
     
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.markdown("#### Upload Image or Video")
-        uploaded_file = st.file_uploader(
-            "Choose a file",
-            type=['png', 'jpg', 'jpeg', 'mp4', 'mov', 'avi'],
-            label_visibility="collapsed"
-        )
-        if uploaded_file:
-            # If video, take first frame (simplified - just show message for now)
-            if uploaded_file.type.startswith('video'):
-                st.warning("Video uploaded. Processing first frame...")
-                # For video, you'd need additional libraries like opencv-python
-                # For now, we'll just notify the user
-            else:
-                st.session_state.uploaded_image = uploaded_file
-                st.image(uploaded_file, caption="Uploaded Image", use_container_width=True)
-    
-    with col2:
-        st.markdown("#### Capture from Camera")
-        camera_photo = st.camera_input("Take a picture", label_visibility="collapsed")
-        if camera_photo:
-            st.session_state.uploaded_image = camera_photo
+    st.markdown("#### Capture from Camera")
+    camera_photo = st.camera_input("Take a picture", label_visibility="collapsed")
+    if camera_photo:
+        st.session_state.uploaded_image = camera_photo
     
     st.markdown('</div>', unsafe_allow_html=True)
     
