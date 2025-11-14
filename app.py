@@ -8,7 +8,7 @@ from PIL import Image
 
 # Page configuration
 st.set_page_config(
-    page_title="Lector Medidor Eléctrico",
+    page_title="Lector Medidor",
     page_icon="⚡",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -53,8 +53,8 @@ st.markdown("""
 if 'api_key' not in st.session_state:
     st.session_state.api_key = ""
 if 'prompt' not in st.session_state:
-    st.session_state.prompt = """You are an expert in electrical infrastructure inspection. 
-Analyze the provided image of an electrical energy meter.
+    st.session_state.prompt = """You are an expert in infrastructure inspection. 
+Analyze the provided image of a water, electrical, or gas meter.
 
 Your tasks:
 1. Detect and extract the numeric reading shown on the meter display (in kWh).
@@ -69,7 +69,7 @@ Your tasks:
 Do not include any explanation or formatting other than the requested JSON output. 
 Attached is an example for you to replace with the current, correct data.
 
-If the image does not show an electrical meter, just return the same JSON with zeros and in the summary add a text saying that what the photo is, if recognizable.
+If the image does not show a water, electrical, or gas meter meter, just return the same JSON with zeros and in the summary add a text saying that what the photo is, if recognizable.
 
 All answers on the returning JSON must be in SPANISH."""
 
@@ -226,7 +226,7 @@ tab1, tab2 = st.tabs(["Lector de Medidor", "Configuración"])
 # MAIN TAB
 with tab1:
     st.markdown('<div class="main-header">Lector de Medidor Eléctrico</div>', unsafe_allow_html=True)
-    #st.markdown('<div class="sub-header">Capture an image of an electric meter for automated analysis</div>', unsafe_allow_html=True)
+    #st.markdown('<div class="sub-header">Capture an image of a meter for automated analysis</div>', unsafe_allow_html=True)
     
     # Camera capture section
     #st.markdown('<div class="upload-section">', unsafe_allow_html=True)
@@ -331,11 +331,11 @@ with tab2:
     col1, col2, col3 = st.columns([1, 1, 1])
     with col2:
         if st.button("Restaurar Valores Predeterminados", use_container_width=True):
-            st.session_state.prompt = """You are an expert in electrical infrastructure inspection. 
-Analyze the provided image of an electrical energy meter.
+            st.session_state.prompt = """You are an expert in infrastructure inspection. 
+Analyze the provided image of an electric, gas or water meter.
 
 Your tasks:
-1. Detect and extract the numeric reading shown on the meter display (in kWh).
+1. Detect and extract the numeric reading shown on the meter display.
 2. Evaluate the readability of each digit and provide an overall reading quality score (0–100), where 100 = perfectly clear.
 3. Assess the condition of the meter and its immediate surroundings based on visual cues:
    - Dirt, rust, cracks, or damage.
